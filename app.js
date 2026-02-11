@@ -156,6 +156,21 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   }
 });
 
+// 15.1) Dedicated Global Feed page
+app.get("/feed", isLoggedIn, async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.userid);
+    const allPosts = await postModel.find({})
+      .populate("user")
+      .sort({ createdAt: -1 });
+
+    res.render("globalfeed", { user, allPosts });
+  } catch (error) {
+    console.error("Error loading feed:", error);
+    res.status(500).send("Error loading feed");
+  }
+});
+
 
 // 16) Show profile picture upload form
 app.get("/profile/upload", isLoggedIn, (req, res) => {
@@ -231,6 +246,31 @@ app.post("/update/:id", isLoggedIn, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Update failed");
+  }
+});
+
+// 22) Delete a post
+app.get("/delete/:id", isLoggedIn, async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.id);
+    if (!post) return res.status(404).send("Post not found");
+
+    // Only the author can delete
+    if (String(post.user) !== String(req.user.userid)) {
+      return res.status(403).send("Unauthorized to delete this post");
+    }
+
+    await postModel.findByIdAndDelete(req.params.id);
+
+    // Also remove from user's posts array
+    await userModel.findByIdAndUpdate(req.user.userid, {
+      $pull: { posts: req.params.id }
+    });
+
+    res.redirect("/profile");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Delete failed");
   }
 });
 

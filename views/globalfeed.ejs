@@ -1,67 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<%- include('partials/head', {title: 'News Feed – SocialNode' }) %>
 
-</head>
-<body>
-    <main class="lg:col-span-2">
-  <h2 class="text-3xl font-bold mb-6 border-b border-gray-700 pb-2">Global Feed</h2>
+  <body class="bg-[#0b0c10] text-[#c5c6c7] antialiased">
 
-  <% if (allPosts && allPosts.length > 0) { %>
-    <div class="space-y-6">
-      <% allPosts.forEach(function(p) {
-           const uid = String((user && (user.userid || user._id)) || '');
-           const likedByUser = (p.likes || []).map(String).includes(uid);
-           const authorName = (p.author && (p.author.username || p.author.email)) ? (p.author.username || p.author.email) : 'User';
-           const authorPic = (p.author && p.author.profilepic) ? `/images/uploads/${p.author.profilepic}` : '/images/uploads/default.jpg';
-           const authorId = (p.author && p.author._id) ? p.author._id : '';
-      %>
-        <article class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <header class="flex items-center gap-4 mb-4">
-            <img
-              src="<%= authorPic %>"
-              alt="Author Avatar"
-              class="w-12 h-12 rounded-full object-cover border-2 border-gray-600"
-            />
-            <div class="flex flex-col min-w-0">
-              <a href="/users/<%= authorId %>"
-                 class="font-semibold text-lg hover:underline truncate">
-                <%= authorName %>
-              </a>
-              <time class="text-gray-400 text-sm truncate"
-                    datetime="<%= p.createdAt ? p.createdAt.toISOString() : new Date().toISOString() %>">
-                • <%= p.createdAt ? new Date(p.createdAt).toLocaleString() : new Date().toLocaleString() %>
-              </time>
+    <%- include('partials/navbar') %>
+
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          <!-- Left Column: Profile Card & Quick Navigation -->
+          <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
+            <div class="glass rounded-3xl overflow-hidden">
+              <div class="h-24 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+              <div class="px-6 pb-6 -mt-12 text-center">
+                <img src="/images/uploads/<%= (user && user.profilepic) ? user.profilepic : 'default.jpg' %>"
+                  alt="Avatar"
+                  class="w-24 h-24 rounded-3xl object-cover mx-auto border-4 border-[#0b0c10] bg-[#0b0c10] shadow-xl" />
+                <h1 class="mt-4 text-xl font-bold text-white">
+                  <%= user.name || 'User' %>
+                </h1>
+                <p class="text-zinc-500 text-sm">@<%= user.username %>
+                </p>
+              </div>
             </div>
-          </header>
 
-          <p class="text-gray-200 whitespace-pre-wrap break-words mb-5 text-base leading-relaxed"><%= p.content %></p>
+            <div class="glass rounded-3xl p-3 space-y-1">
+              <a href="/profile"
+                class="flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
+                <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H14">
+                  </path>
+                </svg>
+                Personal Dashboard
+              </a>
+              <a href="/feed"
+                class="flex items-center gap-3 px-4 py-3 bg-blue-600/10 border border-blue-500/20 text-white rounded-2xl transition-all">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                  </path>
+                </svg>
+                Global Feed
+              </a>
+            </div>
+          </aside>
 
-          <div class="flex items-center gap-4">
-            <a href="/like/<%= p._id %>"
-               class="<%= likedByUser ? 'bg-green-700 hover:bg-green-800' : 'bg-green-600 hover:bg-green-700' %> px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 select-none transition-colors duration-200">
-               👍 <span><%= likedByUser ? 'Unlike' : 'Like' %></span>
-            </a>
-            <span class="text-blue-400 text-sm font-medium">
-              <%= (p.likes && p.likes.length) ? p.likes.length : 0 %> Likes
-            </span>
+          <!-- Middle Feed -->
+          <section class="lg:col-span-8 space-y-8">
+            <header class="flex items-center justify-between mb-2 px-4">
+              <h2 class="text-2xl font-bold text-white tracking-tight">Global News Feed</h2>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] font-bold text-blue-500 uppercase tracking-widest px-3 py-1 bg-blue-500/10 rounded-lg">Realtime</button>
+              </div>
+            </header>
 
-            <a href="/posts/<%= p._id %>"
-               class="ml-auto text-sm text-zinc-400 hover:text-white underline underline-offset-4">
-               View details
-            </a>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <p class="text-gray-400 text-center mt-10 text-lg">No posts in the global feed yet.</p>
-  <% } %>
-</main>
+            <% if (allPosts && allPosts.length> 0) { %>
+              <div class="space-y-6">
+                <% allPosts.forEach(function(p) { const uid=String((user && (user.userid || user._id)) || '' ); const
+                  likedByUser=(p.likes || []).map(String).includes(uid); const authorName=(p.user && (p.user.username ||
+                  p.user.email)) ? (p.user.username || p.user.email) : 'User' ; const authorPic=(p.user &&
+                  p.user.profilepic) ? `/images/uploads/${p.user.profilepic}` : '/images/uploads/default.jpg' ; const
+                  authorId=(p.user && p.user._id) ? p.user._id : '' ; %>
+                  <article class="glass rounded-[32px] p-8 group transition-all duration-300 hover:border-white/20">
+                    <header class="flex items-center justify-between mb-5">
+                      <div class="flex items-center gap-4">
+                        <img src="<%= authorPic %>" alt="Avatar"
+                          class="w-12 h-12 rounded-2xl object-cover ring-2 ring-white/5" />
+                        <div>
+                          <h3 class="text-white font-bold leading-none hover:text-blue-400 transition-colors">
+                            <%= authorName %>
+                          </h3>
+                          <time
+                            class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-1 block tracking-tighter">
+                            <%= p.createdAt ? new Date(p.createdAt).toLocaleString(undefined, {month: 'short' ,
+                              day: 'numeric' , hour: '2-digit' , minute:'2-digit'}) : 'Recently' %>
+                          </time>
+                        </div>
+                      </div>
 
-</body>
+                      <% const currUid=String(user.userid || user._id || '' ); const
+                        isOwnPost=String(authorId)===currUid; %>
+                        <% if(isOwnPost) { %>
+                          <div class="flex gap-1.5 transition-all">
+                            <a href="/posts/<%= p._id %>/edit"
+                              class="p-2.5 text-zinc-500 hover:text-yellow-500 hover:bg-yellow-500/10 rounded-2xl transition-all border border-white/5 hover:border-yellow-500/20">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                </path>
+                              </svg>
+                            </a>
+                            <a href="/delete/<%= p._id %>" onclick="return confirm('Archive this publication?')"
+                              class="p-2.5 text-zinc-500 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all border border-white/5 hover:border-red-500/20">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                              </svg>
+                            </a>
+                          </div>
+                          <% } %>
+                    </header>
+
+                    <p class="text-zinc-200 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
+                      <%= p.content %>
+                    </p>
+
+                    <div class="flex items-center gap-8 pt-5 border-t border-white/5">
+                      <a href="/like/<%= p._id %>" class="flex items-center gap-2 group/btn">
+                        <div
+                          class="<%= likedByUser ? 'bg-red-500 text-white' : 'text-zinc-500 hover:bg-red-500/10 hover:text-red-500' %> p-2.5 rounded-2xl transition-all">
+                          <svg class="w-6 h-6 <%= likedByUser ? 'fill-current' : '' %>" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                            </path>
+                          </svg>
+                        </div>
+                        <span class="<%= likedByUser ? 'text-white font-bold' : 'text-zinc-600' %> text-sm">
+                          <%= (p.likes && p.likes.length) ? p.likes.length : 0 %>
+                        </span>
+                      </a>
+                    </div>
+                  </article>
+                  <% }) %>
+              </div>
+              <% } %>
+          </section>
+        </div>
+      </main>
+  </body>
+
 </html>

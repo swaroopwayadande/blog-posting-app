@@ -1,113 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-zinc-900 text-white antialiased">
-  <main class="min-h-screen w-full flex items-center justify-center p-6">
-    <section class="w-full max-w-lg">
-      <header class="mb-8">
-        <h1 class="text-3xl font-semibold tracking-tight">Create Account</h1>
-        <p class="text-zinc-400 mt-2 text-sm">Join in a minute. All fields are required.</p>
-      </header>
+<%- include('partials/head', {title: 'Join SocialNode' }) %>
 
-      <form action="/register" method="post" class="grid gap-4 bg-zinc-950/40 backdrop-blur rounded-xl p-6 border border-zinc-800">
-        <!-- Full Name -->
-        <div class="grid gap-2">
-          <label for="name" class="text-sm text-zinc-300">Full Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            placeholder="John Doe"
-            required
-            class="px-3 py-2 bg-transparent border-2 border-zinc-800 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-            autocomplete="name"
-          />
+  <body class="bg-[#050505] text-white antialiased selection:bg-blue-500/30">
+    <main class="min-h-screen w-full flex flex-col lg:flex-row">
+
+      <!-- Hero Branding Side -->
+      <section
+        class="lg:w-1/2 p-12 lg:p-24 flex flex-col justify-center relative overflow-hidden bg-gradient-to-br from-blue-900/20 to-zinc-900/40">
+        <div
+          class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none">
         </div>
-
-        <!-- Username -->
-        <div class="grid gap-2">
-          <label for="username" class="text-sm text-zinc-300">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="johndoe"
-            required
-            class="px-3 py-2 bg-transparent border-2 border-zinc-800 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-            autocomplete="username"
-          />
+        <div class="relative z-10 max-w-lg">
+          <div
+            class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full text-blue-400 text-sm font-semibold mb-8 animate-pulse">
+            🚀 Next-gen Social Platform
+          </div>
+          <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+            Connect with the <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">future</span>.
+          </h1>
+          <p class="text-zinc-400 text-xl leading-relaxed mb-8">
+            SocialNode is the place where creators, developers, and thinkers share ideas and build communities.
+          </p>
+          <div class="flex items-center gap-4 text-sm font-medium text-zinc-500">
+            <span class="flex items-center gap-1.5"><svg class="w-5 h-5 text-green-500" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"></path>
+              </svg> Distributed Network</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-zinc-800"></span>
+            <span class="flex items-center gap-1.5"><svg class="w-5 h-5 text-green-500" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"></path>
+              </svg> Encrypted Content</span>
+          </div>
         </div>
+      </section>
 
-        <!-- Password -->
-        <div class="grid gap-2">
-          <label for="password" class="text-sm text-zinc-300">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            required
-            minlength="8"
-            class="px-3 py-2 bg-transparent border-2 border-zinc-800 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-            autocomplete="new-password"
-          />
-          <p class="text-xs text-zinc-500">Use at least 8 characters, including a number and a symbol.</p>
+      <!-- Form Side -->
+      <section class="lg:w-1/2 p-8 lg:p-12 flex items-center justify-center bg-zinc-950 border-l border-white/5">
+        <div class="w-full max-w-md">
+          <header class="mb-10">
+            <h2 class="text-3xl font-bold mb-2">Create Account</h2>
+            <p class="text-zinc-500">Start your journey with SocialNode today.</p>
+          </header>
+
+          <form action="/register" method="post" class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Full Name</label>
+                <input name="name" type="text" placeholder="John Doe" required
+                  class="w-full bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600" />
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Username</label>
+                <input name="username" type="text" placeholder="johndoe" required
+                  class="w-full bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Email Address</label>
+              <input name="email" type="email" placeholder="john@example.com" required
+                class="w-full bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600" />
+            </div>
+
+            <div class="space-y-2 relative">
+              <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Password</label>
+              <input name="password" type="password" placeholder="••••••••" required
+                class="w-full bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600" />
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-zinc-500 uppercase tracking-widest">Age</label>
+              <input name="age" type="number" min="13" placeholder="18" required
+                class="w-full bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-zinc-600" />
+            </div>
+
+            <button type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 active:transform active:scale-[0.98] text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 mt-4">
+              Create Account
+            </button>
+          </form>
+
+          <footer class="mt-8 pt-8 border-t border-zinc-900 flex flex-col gap-4">
+            <p class="text-sm text-zinc-500 text-center">
+              Already have an account? <a href="/login" class="text-blue-500 font-bold hover:underline">Log In</a>
+            </p>
+            <div class="flex justify-center gap-6 text-[10px] uppercase tracking-widest font-bold text-zinc-600">
+              <a href="#" class="hover:text-zinc-400 font-bold">Privacy Policy</a>
+              <a href="#" class="hover:text-zinc-400 font-bold">Terms of Service</a>
+            </div>
+          </footer>
         </div>
+      </section>
+    </main>
+  </body>
 
-        <!-- Email -->
-        <div class="grid gap-2">
-          <label for="email" class="text-sm text-zinc-300">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="john@example.com"
-            required
-            class="px-3 py-2 bg-transparent border-2 border-zinc-800 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-            autocomplete="email"
-          />
-        </div>
-
-        <!-- Age -->
-        <div class="grid gap-2">
-          <label for="age" class="text-sm text-zinc-300">Age</label>
-          <input
-            id="age"
-            name="age"
-            type="number"
-            min="13"
-            placeholder="18"
-            required
-            class="px-3 py-2 bg-transparent border-2 border-zinc-800 rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-            inputmode="numeric"
-          />
-        </div>
-
-        <!-- Actions -->
-        <div class="mt-2 flex items-center gap-3">
-          <button
-            type="submit"
-            class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-md font-medium transition-colors"
-          >
-            Create Account
-          </button>
-
-          <!-- Go to Login -->
-          <a
-            href="/login"
-            class="px-5 py-2.5 bg-transparent border-2 border-zinc-700 hover:border-zinc-600 text-zinc-200 rounded-md transition-colors"
-            aria-label="Go to Login"
-          >
-            Go to Login
-          </a>
-        </div>
-      </form>
-    </section>
-  </main>
-</body>
 </html>
